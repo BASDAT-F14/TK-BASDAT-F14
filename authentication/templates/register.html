@@ -1,34 +1,97 @@
-{% extends 'base.html' %}
-
-{% block meta %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-{% endblock meta %}
+    <style>
+        /* Style for the login container */
+        .login {
+            width: 300px;
+            margin: 0 auto;
+            margin-top: 50px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
 
-{% block content %}  
+        /* Style for the login form elements */
+        .login input[type="text"],
+        .login input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
 
-<div class = "login">
-    
-    <h1>Register</h1>  
+        /* Style for the login button */
+        .login input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 3px;
+            color: #fff;
+            cursor: pointer;
+        }
 
-        <form method="POST" >  
-            {% csrf_token %}  
-            <table>  
-                {{ form.as_table }}  
-                <tr>  
+        .login input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        /* Style for the title */
+        .login h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Style for error messages */
+        .login ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .login ul li {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="login">
+        <h1>Register</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td><label for="username">Username:</label></td>
+                    <td><input type="text" name="username" id="username" placeholder="Username" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td><label for="password">Password:</label></td>
+                    <td><input type="password" name="password" id="password" placeholder="Password" class="form-control"></td>
+                </tr>
+                <tr>
+                    <td><label for="confirm_password">Confirm Password:</label></td>
+                    <td><input type="password" name="confirm_password" id="confirm_password" placeholder="Confirm Password" class="form-control"></td>
+                </tr>
+                <tr>
                     <td></td>
-                    <td><input type="submit" name="submit" value="Daftar"/></td>  
-                </tr>  
-            </table>  
+                    <td><input type="submit" name="submit" value="Register"></td>
+                </tr>
+            </table>
         </form>
-
-    {% if messages %}  
-        <ul>   
-            {% for message in messages %}  
-                <li>{{ message }}</li>  
-                {% endfor %}  
-        </ul>   
-    {% endif %}
-
-</div>  
-
-{% endblock content %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</body>
+</html>
