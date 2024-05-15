@@ -1,0 +1,8 @@
+15/05/2024 adding database of pacilflix to neon, how to : 
+                - buka cmd
+                - input tanpa string : "psql -d postgresql://pacilflixdb_owner:9ocvgwQMarY1@ep-empty-wind-a1tpns38.ap-southeast-1.aws
+                - .neon.tech/pacilflix?sslmode=require"
+                - sekarang telah masuk pada remote database
+                - skip this part --> menambahkan table dan schema pacilflix pada neon
+                - set search_path to pacilflix;
+                - now ure done
