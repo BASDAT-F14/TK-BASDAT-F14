@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-from os import getenv
+from os import environ
 from dotenv import load_dotenv
+
+import sys
+load_dotenv(override=True)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,18 +80,18 @@ WSGI_APPLICATION = 'TK_BASDAT_F14.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 PGHOST='ep-empty-wind-a1tpns38.ap-southeast-1.aws.neon.tech'
-PGDATABASE='pacilflixdb'
+PGDATABASE='pacilflix'
 PGUSER='pacilflixdb_owner'
-PGPASSWORD='9ocvgwQMarY1'
+PGPASSWORD='9ocvgwQMarY1'   
 
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql',
-    'NAME': getenv('PGDATABASE'),
-    'USER': getenv('PGUSER'),
-    'PASSWORD': getenv('PGPASSWORD'),
-    'HOST': getenv('PGHOST'),
-    'PORT': getenv('PGPORT', 5432),
+    'NAME': environ.get('PGDATABASE'),
+    'USER': environ.get('PGUSER'),
+    'PASSWORD': environ.get('PGPASSWORD'),
+    'HOST': environ.get('PGHOST'),
+    'PORT': environ.get('PGPORT', 5432),
     'OPTIONS': {
       'sslmode': 'require',
     },
