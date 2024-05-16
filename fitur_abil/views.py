@@ -3,14 +3,9 @@ from django.http import HttpResponse
 from django.db import connection
 from django.contrib.auth.decorators import login_required
 
-
-
-
-
 def show_main(request):
     context = {'judul':'tutor pbp','requestan':'dong kak','id': 1012}
     
-
     # Retrieve film data from the database
     with connection.cursor() as cursor:
         cursor.execute("SET search_path TO PACILFLIX")
@@ -112,7 +107,91 @@ def unduhan(request):
     return render (request, 'unduhan.html')
 
 def langganan(request):
-    return render (request, 'langganan.html')
+    with connection.cursor() as cursor:
+        cursor.execute("SET search_path TO PACILFLIX")
+        cursor.execute("""
+            SELECT 
+                paket.nama AS nama_paket,
+                paket.harga as harga_paket,
+                paket.resolusi_layar as resolusi_layar_paket
+            FROM 
+                paket
+        """)
+        rows = cursor.fetchall()
+    premium = {"harga": 0, "resolusi":"-"}
+    lanjutan ={"harga": 0, "resolusi":"-"}
+    dasar = {"harga": 0, "resolusi":"-"}
+
+    for i in rows:
+        if i[0] == 'Paket Dasar':
+            dasar['harga'] = (i[1])
+            dasar['resolusi']=(i[2])
+        elif i[0] == 'Paket Lanjutan':
+            lanjutan['harga'] = (i[1])
+            lanjutan['resolusi']=(i[2])
+        else:
+            premium['harga'] = (i[1])
+            premium['resolusi']=(i[2])
+
+    listperangkat = {}
+    
+    with connection.cursor() as cursor:
+        cursor.execute("SET search_path TO PACILFLIX")
+        cursor.execute("""
+            SELECT 
+                dukungan_perangkat
+            FROM 
+                dukungan_perangkat
+            where
+                nama_paket = 'Paket Dasar'
+        """)
+        rows = cursor.fetchall()
+        listperangkat.update({"Paket Dasar":rows})
+
+    with connection.cursor() as cursor:
+        cursor.execute("SET search_path TO PACILFLIX")
+        cursor.execute("""
+            SELECT 
+                dukungan_perangkat
+            FROM 
+                dukungan_perangkat
+            where
+                nama_paket = 'Paket Lanjutan'
+        """)
+        rows = cursor.fetchall()
+        listperangkat.update({"Paket Lanjutan":rows})
+
+    with connection.cursor() as cursor:
+        cursor.execute("SET search_path TO PACILFLIX")
+        cursor.execute("""
+            SELECT 
+                dukungan_perangkat
+            FROM 
+                dukungan_perangkat
+            where
+                nama_paket = 'Paket Premium'
+        """)
+        rows = cursor.fetchall()
+        listperangkat.update({"Paket Premium":rows})
+    result = []
+
+    for i in listperangkat:
+        stringawal = ""
+        for j in listperangkat[f"{i}"]:
+            stringawal+=str(j)[2:-3]
+            stringawal+= ", "
+        stringawal = stringawal[:-2]
+        if i == "Paket Dasar":
+            dasar["perangkat"] = stringawal
+        elif i == "Paket Lanjutan":
+            lanjutan["perangkat"] = stringawal
+        else:
+            premium["perangkat"] = stringawal
+
+    context = {"Premium":premium,
+               "Dasar":dasar,
+               "Lanjutan":lanjutan}
+    return render (request, 'langganan.html', context)
 
 def logout(request):
     return render (request, 'daftar_tayang.html')
