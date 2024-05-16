@@ -4,10 +4,14 @@ from django.db import connection
 from django.contrib.auth.decorators import login_required
 
 
-
-
+def guest(request):
+    return render(request, 'guest.html')
 
 def show_main(request):
+    return render(request, 'main.html')
+    
+
+def daftar_tayang(request):
     context = {'judul':'tutor pbp','requestan':'dong kak','id': 1012}
     
 
@@ -32,7 +36,7 @@ def show_main(request):
 
     return render(request, 'search_user.html', context)
 
-def guest(request):
+def daftar_tayang_guest(request):
     context = {'judul':'tutor pbp','requestan':'dong kak','id': 1012}
     
     # Retrieve film data from the database
