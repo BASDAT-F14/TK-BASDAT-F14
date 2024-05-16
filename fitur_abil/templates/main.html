@@ -110,38 +110,8 @@
 </head>
 <body>
   {% block content %}
-  {% include 'navbar_guest.html' %}
-  <div class="header">Daftar Tayangan</div>
-  <div class="sub-header">
-    <form id="form" role="search">
-      <input type="search" id="query" name="q"
-       placeholder="Search..."
-       aria-label="Search through site content">
-       <button class="button-27">Search</button>
-    </form>
-  </div>
-  <div class="sub-header">Pencarian Tayangan berdasarkan judul</div>
-  <div class="card">
-    <h2>Film</h2>
-    <table>
-      <tr>
-        <th>UUID</th>
-        <th>URL</th>
-        <th>Release Date</th>
-        <th>Duration</th>
-        <th>Action</th>
-      </tr>
-      {% for film in films %}
-      <tr>
-        <td>{{ film.uuid }}</td>
-        <td><a href="{{ film.url }}">{{ film.url }}</a></td>
-        <td>{{ film.release_date }}</td>
-        <td>{{ film.duration }} minutes</td>
-        <td><button class="button-27" role="button">Lihat Tayangan</button></td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
+  {% include 'navbar.html' %}
+  <div class="header">Selamat Datang Di Pachilflix TK-F-14</div>
   {% endblock content %}
 </body>
 </html>

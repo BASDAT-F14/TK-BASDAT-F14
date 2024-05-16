@@ -29,24 +29,53 @@
                             <th>Tipe</th>
                             <th>Jenis Kelamin</th>
                             <th>Kewarganegaraan</th>
-                            <!-- Add more columns as needed -->
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td><data></td>
-                            <td><data></td>
-                            <td><data></td>
-                            <td><data></td>
-                            <!-- Add more data as needed -->
+                    <tbody id="kontributorTableBody">
+                        {% for kontributor in kontributor_sutradara %}
+                        <tr data-tipe="sutradara">
+                            <td>{{ kontributor.nama }}</td>
+                            <td>{{ kontributor.tipe }}</td>
+                            <td>{{ kontributor.jenis_kelamin }}</td>
+                            <td>{{ kontributor.kewarganegaraan }}</td>
                         </tr>
-                        <!-- Add more rows as needed -->
+                        {% endfor %}
+                        {% for kontributor in kontributor_pemain %}
+                        <tr data-tipe="pemain">
+                            <td>{{ kontributor.nama }}</td>
+                            <td>{{ kontributor.tipe }}</td>
+                            <td>{{ kontributor.jenis_kelamin }}</td>
+                            <td>{{ kontributor.kewarganegaraan }}</td>
+                        </tr>
+                        {% endfor %}
+                        {% for kontributor in kontributor_penulis_skenario %}
+                        <tr data-tipe="penulisSkenario">
+                            <td>{{ kontributor.nama }}</td>
+                            <td>{{ kontributor.tipe }}</td>
+                            <td>{{ kontributor.jenis_kelamin }}</td>
+                            <td>{{ kontributor.kewarganegaraan }}</td>
+                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('filter').addEventListener('change', function() {
+            var selectedValue = this.value;
+            var rows = document.querySelectorAll('#kontributorTableBody tr');
+            rows.forEach(function(row) {
+                if (row.dataset.tipe === selectedValue || selectedValue === 'all') {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none'
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 {% endblock content %}
+7
