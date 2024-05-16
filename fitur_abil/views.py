@@ -133,8 +133,12 @@ def favorit(request):
 def unduhan(request):
     return render(request, 'unduhan.html')
 
+def beli_langganan(request):
+    return None
 
 def langganan(request):
+    username = request.user.username
+    nama_user = request.session.get('username')
     with connection.cursor() as cursor:
         cursor.execute("SET search_path TO PACILFLIX")
         cursor.execute("""
@@ -216,9 +220,107 @@ def langganan(request):
         else:
             premium["perangkat"] = stringawal
 
+    paket_aktif = []
+
+    # fetch paket sekarang
+    with connection.cursor() as cursor:
+        cursor.execute("SET search_path TO PACILFLIX")
+        cursor.execute("""
+            select username, nama_paket, metode_pembayaran,start_date_time,	end_date_time
+            from (
+                select username, nama_paket, metode_pembayaran, start_date_time,	end_date_time,
+                    row_number() over (partition by username order by timestamp_pembayaran desc) as _rn
+                from transaction 
+                )
+            where _rn = 1;
+        """)
+        rows = cursor.fetchall()
+        paket_aktif = rows
+    paket_user = []
+    for i in paket_aktif:
+        if nama_user == i[0]:
+            paket_user.append(i[1]) #nama paket
+            paket_user.append(i[2])  # metode bayar
+            paket_user.append(i[3]) #start
+            paket_user.append(i[4])  # end
+            if i[1] == "Paket Premium":
+                harga = 189000
+                resolusi = "4K"
+                dukungan_perangkat = "Android, iOS, Windows"
+            elif i[1] == "Paket Lanjutan":
+                harga = 139000
+                resolusi = "1080p"
+                dukungan_perangkat = "Android, iOS, Windows"
+            else:
+                harga = 99000
+                resolusi = "720p"
+                dukungan_perangkat = "Android, iOS"
+            paket_user.append(harga)
+            paket_user.append(resolusi)
+            paket_user.append(dukungan_perangkat)
+    if len(paket_user) == 0:
+        for i in range (7):
+            paket_user.append("-")
+
+    paket_user_dict = {}
+    paket_user_dict.update({"nama":paket_user[0],
+                            "metode_bayar":paket_user[1],
+                            "start_date":paket_user[2],
+                            "end_date":paket_user[3],
+                            "harga":paket_user[4],
+                            "resolusi":paket_user[5],
+                            "perangkat":paket_user[6]})
+
+    # fetching history transactions
+    history = []
+    with connection.cursor() as cursor:
+        cursor.execute("SET search_path TO PACILFLIX")
+        cursor.execute("""
+            select * from transaction;
+        """)
+        rows = cursor.fetchall()
+        history = rows
+    history_user = []
+    for i in history:
+        if i[0] == nama_user:
+            history_user.append(i)
+    idskrg = 0
+    history_dict = {}
+    for i in history_user:
+        history_start_date = []
+        history_end_date = []
+        history_nama_paket = []
+        history_timestamp = []
+        history_metode = []
+        history_start_date.append(i[1])
+        history_end_date.append(i[2])
+        history_nama_paket.append(i[3])
+        history_metode.append(i[4])
+        history_timestamp.append(i[5])
+        idskrg +=1
+        if i[3] == "Paket Premium":
+                harga = 189000
+                resolusi = "4K"
+                dukungan_perangkat = "Android, iOS, Windows"
+        elif i[3] == "Paket Lanjutan":
+            harga = 139000
+            resolusi = "1080p"
+            dukungan_perangkat = "Android, iOS, Windows"
+        else:
+            harga = 99000
+            resolusi = "720p"
+            dukungan_perangkat = "Android, iOS"
+        history_dict_now = {"start":i[1], "end":i[2], "nama":i[3],
+                    "metode":i[4], "waktu":i[5], "bayar":harga}
+        history_dict[idskrg] = history_dict_now.copy()
+
+    print(history_dict)
     context = {"Premium":premium,
                "Dasar":dasar,
-               "Lanjutan":lanjutan}
+               "Lanjutan":lanjutan,
+               "nama_user":request.session.get('username'),
+               "paket_sekarang":paket_user_dict,
+               "history":history_dict}
     return render (request, 'langganan.html', context)
 
 def logout(request):
