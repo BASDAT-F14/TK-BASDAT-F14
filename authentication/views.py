@@ -6,7 +6,7 @@ from .forms import CustomUserCreationForm
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db import connection
-
+from django.contrib.sessions.models import Session
 
 @csrf_exempt
 def login(request):
@@ -19,16 +19,24 @@ def login(request):
             cursor.execute('SET search_path TO PACILFLIX')
             cursor.execute("SELECT username, password FROM pengguna WHERE username = %s", [username])
             row = cursor.fetchone()
-        
+
         # Check if user exists and password matches
         if row is not None and row[1] == password:
-            
-            return redirect('fitur_abil:main')  # Redirect to main page
+            # Reset search path to default for session management
+            with connection.cursor() as cursor:
+                cursor.execute('SET search_path TO DEFAULT')
+
+            # Set session
+            request.session['username'] = username
+            # Redirect to main page
+            return redirect('fitur_abil:main')
         else:
             # Authentication failed, show error message
             messages.error(request, "Invalid username or password.")
 
     return render(request, 'login.html')
+
+
     
 @csrf_exempt
 def logout(request):
