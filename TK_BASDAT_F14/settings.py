@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'fitur_abil.context_processors.add_username',
             ],
         },
     },
@@ -95,6 +96,7 @@ DATABASES = {
     'PORT': environ.get('PGPORT', 5432),
     'OPTIONS': {
       'sslmode': 'require',
+      'options': '-c search_path=public,PACILFLIX'
     },
   }
 }
