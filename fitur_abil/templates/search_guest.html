@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 {% block content %}
 {% include 'navbar.html' %}
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ judul }}</title>
   <style>
     body {
       font-family: 'Inter', sans-serif;
@@ -63,39 +66,84 @@
     .card table tr:nth-child(even) {
       background-color: #f2f2f2;
     }
+
+    .button-27 {
+      appearance: none;
+      background-color: #7a7777;
+      border: 2px solid #5a5a5a;
+      border-radius: 15px;
+      box-sizing: border-box;
+      color: #FFFFFF;
+      cursor: pointer;
+      display: inline-block;
+      font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+      font-size: 14px;
+      font-weight: 600;
+      line-height: normal;
+      margin: 0;
+      min-height: 40px;
+      min-width: 16;
+      outline: none;
+      padding: 8px 16px;
+      text-align: center;
+      text-decoration: none;
+      transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      width: 100%;
+      will-change: transform;
+    }
+
+    .button-27:disabled {
+      pointer-events: none;
+    }
+
+    .button-27:hover {
+      box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+      transform: translateY(-2px);
+    }
+
+    .button-27:active {
+      box-shadow: none;
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body>
+  {% block content %}
+  {% include 'navbar_guest.html' %}
   <div class="header">Daftar Tayangan</div>
-  <div class="sub-header"><form id="form" role="search">
-    <input type="search" id="query" name="q"
-     placeholder="Search..."
-     aria-label="Search through site content">
-     <button class="button-27">Search</button>
-  </form></div>
+  <div class="sub-header">
+    <form id="form" role="search">
+      <input type="search" id="query" name="q"
+       placeholder="Search..."
+       aria-label="Search through site content">
+       <button class="button-27">Search</button>
+    </form>
+  </div>
   <div class="sub-header">Pencarian Tayangan berdasarkan judul</div>
   <div class="card">
     <h2>Film</h2>
     <table>
       <tr>
-        <th>Judul</th>
-        <th>Sinopsis Trailer</th>
-        <th>URL Trailer</th>
-        <th>Tanggal Rilis Trailer</th>
+        <th>UUID</th>
+        <th>URL</th>
+        <th>Release Date</th>
+        <th>Duration</th>
+        <th>Action</th>
       </tr>
+      {% for film in films %}
       <tr>
-        <td>1</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
+        <td>{{ film.uuid }}</td>
+        <td><a href="{{ film.url }}">{{ film.url }}</a></td>
+        <td>{{ film.release_date }}</td>
+        <td>{{ film.duration }} minutes</td>
+        <td><button class="button-27" role="button">Lihat Tayangan</button></td>
       </tr>
-      <tr>
-        <td>2</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-      </tr>
+      {% endfor %}
     </table>
   </div>
+  {% endblock content %}
 </body>
 </html>
