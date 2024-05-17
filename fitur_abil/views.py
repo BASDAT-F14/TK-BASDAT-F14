@@ -10,12 +10,13 @@ from datetime import timedelta
 def guest(request):
     return render(request, 'guest.html')
 
-
 def show_main(request):
     return render(request, 'main.html')
 
 def pembelian_premium(request):
     return render(request, 'beli_langganan_premium.html')
+
+
 def pembelian_lanjutan(request):
     return render(request, 'beli_langganan_lanjutan.html')
 def pembelian_dasar(request):
@@ -34,7 +35,7 @@ def pembelian_paket_premium(request):
         ldr = 'transaction'
         timestamp = date+ " " + jam
         Begindate = datetime.strptime(date, "%Y-%m-%d")
-        dateakhir = Enddate = Begindate + timedelta(days=1)
+        dateakhir = Begindate + timedelta(days=7)
         buatdisql = f"""
                 INSERT 
                     INTO {ldr}
@@ -42,14 +43,36 @@ def pembelian_paket_premium(request):
                     ('{nama_user}', '{date}','{str(dateakhir)[0:-9]}', '{nama_paket}', '{metode}', '{timestamp}'); 
             """
         print(buatdisql)
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute("SET search_path TO PACILFLIX")
-                cursor.execute(buatdisql)
-        except:
-            return render(request, 'notsuccess.html')
+        username = request.user.username
+        nama_user = request.session.get('username')
+        disql = f"""
+                select username, nama_paket, metode_pembayaran,start_date_time,	end_date_time, timestamp_pembayaran
+                from (
+                    select username, nama_paket, metode_pembayaran, start_date_time,	end_date_time, timestamp_pembayaran,
+                        row_number() over (partition by username order by timestamp_pembayaran desc) as _rn
+                    from transaction 
+                    )
+                where _rn = 1 and username = '{nama_user}';
+            """
+        with connection.cursor() as cursor:
+            cursor.execute("SET search_path TO PACILFLIX")
+            cursor.execute(disql)
+            rows = cursor.fetchall()
+        # 2024-05-17 18:47:15
+        timestamp = rows[0][5]
+        waktudibeli = timestamp
+        d1 = datetime.now()
+        status_paket_sekarang_lebih_dari_1_hari = False
+        if d1-waktudibeli>timedelta(1):
+            try:
+                with connection.cursor() as cursor:
+                    cursor.execute("SET search_path TO PACILFLIX")
+                    cursor.execute(buatdisql)
+                    return render(request, 'success.html')
+            except:
+                return render(request, 'notsuccess.html')
 
-    return render(request, 'success.html')
+    return render(request, 'notsuccess.html')
 
 @csrf_exempt
 def pembelian_paket_lanjutan(request):
@@ -64,7 +87,7 @@ def pembelian_paket_lanjutan(request):
         ldr = 'transaction'
         timestamp = date+ " " + jam
         Begindate = datetime.strptime(date, "%Y-%m-%d")
-        dateakhir = Enddate = Begindate + timedelta(days=1)
+        dateakhir = Begindate + timedelta(days=7)
         buatdisql = f"""
                 INSERT 
                     INTO {ldr}
@@ -72,14 +95,36 @@ def pembelian_paket_lanjutan(request):
                     ('{nama_user}', '{date}','{str(dateakhir)[0:-9]}', '{nama_paket}', '{metode}', '{timestamp}'); 
             """
         print(buatdisql)
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute("SET search_path TO PACILFLIX")
-                cursor.execute(buatdisql)
-        except:
-            return render(request, 'notsuccess.html')
+        username = request.user.username
+        nama_user = request.session.get('username')
+        disql = f"""
+                select username, nama_paket, metode_pembayaran,start_date_time,	end_date_time, timestamp_pembayaran
+                from (
+                    select username, nama_paket, metode_pembayaran, start_date_time,	end_date_time, timestamp_pembayaran,
+                        row_number() over (partition by username order by timestamp_pembayaran desc) as _rn
+                    from transaction 
+                    )
+                where _rn = 1 and username = '{nama_user}';
+            """
+        with connection.cursor() as cursor:
+            cursor.execute("SET search_path TO PACILFLIX")
+            cursor.execute(disql)
+            rows = cursor.fetchall()
+        # 2024-05-17 18:47:15
+        timestamp = rows[0][5]
+        waktudibeli = timestamp
+        d1 = datetime.now()
+        status_paket_sekarang_lebih_dari_1_hari = False
+        if d1-waktudibeli>timedelta(1):
+            try:
+                with connection.cursor() as cursor:
+                    cursor.execute("SET search_path TO PACILFLIX")
+                    cursor.execute(buatdisql)
+                    return render(request, 'success.html')
+            except:
+                return render(request, 'notsuccess.html')
 
-    return render(request, 'success.html')
+    return render(request, 'notsuccess.html')
 
 @csrf_exempt
 def pembelian_paket_dasar(request):
@@ -94,7 +139,7 @@ def pembelian_paket_dasar(request):
         ldr = 'transaction'
         timestamp = date+ " " + jam
         Begindate = datetime.strptime(date, "%Y-%m-%d")
-        dateakhir = Enddate = Begindate + timedelta(days=1)
+        dateakhir = Begindate + timedelta(days=7)
         buatdisql = f"""
                 INSERT 
                     INTO {ldr}
@@ -102,14 +147,36 @@ def pembelian_paket_dasar(request):
                     ('{nama_user}', '{date}','{str(dateakhir)[0:-9]}', '{nama_paket}', '{metode}', '{timestamp}'); 
             """
         print(buatdisql)
-        try:
-            with connection.cursor() as cursor:
-                cursor.execute("SET search_path TO PACILFLIX")
-                cursor.execute(buatdisql)
-        except:
-            return render(request, 'notsuccess.html')
+        username = request.user.username
+        nama_user = request.session.get('username')
+        disql = f"""
+                select username, nama_paket, metode_pembayaran,start_date_time,	end_date_time, timestamp_pembayaran
+                from (
+                    select username, nama_paket, metode_pembayaran, start_date_time,	end_date_time, timestamp_pembayaran,
+                        row_number() over (partition by username order by timestamp_pembayaran desc) as _rn
+                    from transaction 
+                    )
+                where _rn = 1 and username = '{nama_user}';
+            """
+        with connection.cursor() as cursor:
+            cursor.execute("SET search_path TO PACILFLIX")
+            cursor.execute(disql)
+            rows = cursor.fetchall()
+        # 2024-05-17 18:47:15
+        timestamp = rows[0][5]
+        waktudibeli = timestamp
+        d1 = datetime.now()
+        status_paket_sekarang_lebih_dari_1_hari = False
+        if d1-waktudibeli>timedelta(1):
+            try:
+                with connection.cursor() as cursor:
+                    cursor.execute("SET search_path TO PACILFLIX")
+                    cursor.execute(buatdisql)
+                    return render(request, 'success.html')
+            except:
+                return render(request, 'notsuccess.html')
 
-    return render(request, 'success.html')
+    return render(request, 'notsuccess.html')
 
 def daftar_tayang(request):
     # Pastikan pengguna sudah login
@@ -324,9 +391,9 @@ def langganan(request):
     with connection.cursor() as cursor:
         cursor.execute("SET search_path TO PACILFLIX")
         cursor.execute("""
-            select username, nama_paket, metode_pembayaran,start_date_time,	end_date_time
+            select username, nama_paket, metode_pembayaran,start_date_time,	end_date_time, timestamp_pembayaran
             from (
-                select username, nama_paket, metode_pembayaran, start_date_time,	end_date_time,
+                select username, nama_paket, metode_pembayaran, start_date_time,	end_date_time, timestamp_pembayaran,
                     row_number() over (partition by username order by timestamp_pembayaran desc) as _rn
                 from transaction 
                 )
@@ -356,18 +423,31 @@ def langganan(request):
             paket_user.append(harga)
             paket_user.append(resolusi)
             paket_user.append(dukungan_perangkat)
+            paket_user.append(i[5])
     if len(paket_user) == 0:
         for i in range (7):
             paket_user.append("-")
 
+    waktuberakhir = paket_user[7]+timedelta(days=7)
+    d1 = datetime.now()
+    status_paket_sekarang_aktif = True
+    if d1-waktuberakhir>timedelta(0):
+        status_paket_sekarang_aktif = False
+    print(status_paket_sekarang_aktif)
     paket_user_dict = {}
-    paket_user_dict.update({"nama":paket_user[0],
-                            "metode_bayar":paket_user[1],
-                            "start_date":paket_user[2],
-                            "end_date":paket_user[3],
-                            "harga":paket_user[4],
-                            "resolusi":paket_user[5],
-                            "perangkat":paket_user[6]})
+    print(paket_user)
+    if status_paket_sekarang_aktif==False or len(paket_user) == 0:
+        for i in range (7):
+            paket_user.append("-")
+    else:
+        print("keupdate")
+        paket_user_dict.update({"nama":paket_user[0],
+                                "metode_bayar":paket_user[1],
+                                "start_date":paket_user[2],
+                                "end_date":paket_user[3],
+                                "harga":paket_user[4],
+                                "resolusi":paket_user[5],
+                                "perangkat":paket_user[6]})
 
     # fetching history transactions
     history = []
@@ -408,11 +488,11 @@ def langganan(request):
             harga = 99000
             resolusi = "720p"
             dukungan_perangkat = "Android, iOS"
+        delta = i[2]-i[1]
         history_dict_now = {"start":i[1], "end":i[2], "nama":i[3],
-                    "metode":i[4], "waktu":i[5], "bayar":harga}
+                    "metode":i[4], "waktu":i[5], "bayar":harga*delta.days}
+        print(history_dict_now)
         history_dict[idskrg] = history_dict_now.copy()
-
-    print(history_dict)
     context = {"Premium":premium,
                "Dasar":dasar,
                "Lanjutan":lanjutan,
