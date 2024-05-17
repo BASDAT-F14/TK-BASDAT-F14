@@ -114,7 +114,6 @@ def pembelian_paket_lanjutan(request):
         timestamp = rows[0][5]
         waktudibeli = timestamp
         d1 = datetime.now()
-        status_paket_sekarang_lebih_dari_1_hari = False
         if d1-waktudibeli>timedelta(1):
             try:
                 with connection.cursor() as cursor:
