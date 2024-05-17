@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db import connection
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
+from datetime import timedelta 
 
 def guest(request):
     return render(request, 'guest.html')
@@ -10,6 +14,102 @@ def guest(request):
 def show_main(request):
     return render(request, 'main.html')
 
+def pembelian_premium(request):
+    return render(request, 'beli_langganan_premium.html')
+def pembelian_lanjutan(request):
+    return render(request, 'beli_langganan_lanjutan.html')
+def pembelian_dasar(request):
+    return render(request, 'beli_langganan_dasar.html')
+
+@csrf_exempt
+def pembelian_paket_premium(request):
+    if request.method == "POST":
+        nama_paket = "Paket Premium"
+        nama_user = request.session.get('username')
+        metode = request.POST["metodePembayaran"]
+
+        skrg = datetime.now()
+        date = str(skrg)[:10]
+        jam = str(skrg)[11:19]
+        ldr = 'transaction'
+        timestamp = date+ " " + jam
+        Begindate = datetime.strptime(date, "%Y-%m-%d")
+        dateakhir = Enddate = Begindate + timedelta(days=1)
+        buatdisql = f"""
+                INSERT 
+                    INTO {ldr}
+                VALUES 
+                    ('{nama_user}', '{date}','{str(dateakhir)[0:-9]}', '{nama_paket}', '{metode}', '{timestamp}'); 
+            """
+        print(buatdisql)
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SET search_path TO PACILFLIX")
+                cursor.execute(buatdisql)
+        except:
+            return render(request, 'notsuccess.html')
+
+    return render(request, 'success.html')
+
+@csrf_exempt
+def pembelian_paket_lanjutan(request):
+    if request.method == "POST":
+        nama_paket = "Paket Lanjutan"
+        nama_user = request.session.get('username')
+        metode = request.POST["metodePembayaran"]
+
+        skrg = datetime.now()
+        date = str(skrg)[:10]
+        jam = str(skrg)[11:19]
+        ldr = 'transaction'
+        timestamp = date+ " " + jam
+        Begindate = datetime.strptime(date, "%Y-%m-%d")
+        dateakhir = Enddate = Begindate + timedelta(days=1)
+        buatdisql = f"""
+                INSERT 
+                    INTO {ldr}
+                VALUES 
+                    ('{nama_user}', '{date}','{str(dateakhir)[0:-9]}', '{nama_paket}', '{metode}', '{timestamp}'); 
+            """
+        print(buatdisql)
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SET search_path TO PACILFLIX")
+                cursor.execute(buatdisql)
+        except:
+            return render(request, 'notsuccess.html')
+
+    return render(request, 'success.html')
+
+@csrf_exempt
+def pembelian_paket_dasar(request):
+    if request.method == "POST":
+        nama_paket = "Paket Dasar"
+        nama_user = request.session.get('username')
+        metode = request.POST["metodePembayaran"]
+
+        skrg = datetime.now()
+        date = str(skrg)[:10]
+        jam = str(skrg)[11:19]
+        ldr = 'transaction'
+        timestamp = date+ " " + jam
+        Begindate = datetime.strptime(date, "%Y-%m-%d")
+        dateakhir = Enddate = Begindate + timedelta(days=1)
+        buatdisql = f"""
+                INSERT 
+                    INTO {ldr}
+                VALUES 
+                    ('{nama_user}', '{date}','{str(dateakhir)[0:-9]}', '{nama_paket}', '{metode}', '{timestamp}'); 
+            """
+        print(buatdisql)
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SET search_path TO PACILFLIX")
+                cursor.execute(buatdisql)
+        except:
+            return render(request, 'notsuccess.html')
+
+    return render(request, 'success.html')
 
 def daftar_tayang(request):
     # Pastikan pengguna sudah login
@@ -133,8 +233,6 @@ def favorit(request):
 def unduhan(request):
     return render(request, 'unduhan.html')
 
-def beli_langganan(request):
-    return None
 
 def langganan(request):
     username = request.user.username

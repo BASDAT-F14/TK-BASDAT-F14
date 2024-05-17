@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+{% block content %}
+{% include 'navbar.html' %}
+<html>
+<head>
+    <style>
+        body {
+          font-family: 'Inter', sans-serif;
+          background-color: #f4f4f4;
+          margin: 0;
+          padding: 0;
+        }
+    
+        .header {
+          background-color: #333;
+          color: #fff;
+          padding: 10px 0;
+          text-align: center;
+          font-size: 2em;
+          font-weight: 300;
+          letter-spacing: 1px;
+        }
+    
+        .sub-header {
+          text-align: center;
+          font-size: 1.2em;
+          font-weight: 300;
+          color: #333;
+          margin-top: 10px;
+        }
+    
+        .card {
+          width: 80%;
+          margin: 20px auto;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          background: #fff;
+          padding: 20px;
+        }
+    
+        .card h2 {
+          font-size: 1.5em;
+          color: #333;
+          margin-bottom: 20px;
+        }
+    
+        .card table {
+          width: 100%;
+          text-align: center;
+          border-collapse: collapse;
+        }
+    
+        .card table th, .card table td {
+          padding: 10px;
+          border: 1px solid #ddd;
+        }
+    
+        .card table th {
+          background-color: #f4f4f4;
+          color: #333;
+        }
+    
+        .card table tr:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+    
+        .button-27 {
+          appearance: none;
+          background-color: #7a7777;
+          border: 2px solid #5a5a5a;
+          border-radius: 15px;
+          box-sizing: border-box;
+          color: #FFFFFF;
+          cursor: pointer;
+          display: inline-block;
+          font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+          font-size: 14px;
+          font-weight: 600;
+          line-height: normal;
+          margin: 0;
+          min-height: 40px;
+          min-width: 16;
+          outline: none;
+          padding: 8px 16px;
+          text-align: center;
+          text-decoration: none;
+          transition: all 300ms cubic-bezier(.23, 1, 0.32, 1);
+          user-select: none;
+          -webkit-user-select: none;
+          touch-action: manipulation;
+          width: 100%;
+          will-change: transform;
+        }
+        
+        .button-27:disabled {
+          pointer-events: none;
+        }
+        
+        .button-27:hover {
+          box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+          transform: translateY(-2px);
+        }
+        
+        .button-27:active {
+          box-shadow: none;
+          transform: translateY(0);
+        }
+    </style>
+    <title>HALAMAN BELI</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="header">Pembelian Paket Dasar</div>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">Informasi Paket yang Ingin Dibeli:</h1>
+                <p class="card-text">Nama Paket : Paket Dasar<span id="nama"><data></span></p>
+                <p class="card-text">Harga: 189.000<span id="harga"><data></span></p>
+                <p class="card-text">Resolusi Layar: 4K<span id="resolusiLayar"><data></span></p>
+                <p class="card-text">Dukungan Perangkat: Android, iOS, Windows<span id="dukunganPerangkat"><data></span></p>
+                <p class="card-text">Durasi paket : 1 Hari<span id="durasipaket"><data></span></p>
+                <form action="{% url 'fitur_abil:pembelian_paket_dasar' %}" method="post" name="Userinfo" id="Userinfo">{% csrf_token %}
+                    <div class="form-group">
+                        <label for="metodePembayaran">Pilih Metode Pembayaran:</label>
+                        <select class="form-control" id="metodePembayaran" name="metodePembayaran">
+                            <option value="Transfer Bank">Transfer Bank</option>
+                            <option value="Kartu Kredit">Kartu Kredit</option>
+                            <option value="E-Wallet">E-Wallet</option>
+                        </select>
+                        <label for="datetime" id="datetime">Waktu Pembelian</label>
+                        
+                    </div>
+                    <button type="submit" class="btn btn-primary">Bayar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+{% endblock content %}
+
+<script>
+  // Get current date and time
+  var date = new Date();
+  var jam = new Date().getHours();
+  var menit = new Date().getMinutes();
+  var detik = new Date().getSeconds();
+  var jamStr = jam.toLocaleString();
+  var menitStr = menit.toLocaleString();
+  var detikStr = detik.toLocaleString();
+  // Insert date and time into HTML
+  var datetime = date.toLocaleString();
+  document.getElementById("datetime").innerHTML = datetime;
+</script>

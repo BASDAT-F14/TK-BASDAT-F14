@@ -146,21 +146,21 @@
         <td>{{ Premium.harga }}</td>
         <td>{{ Premium.resolusi }}</td>
         <td>{{Premium.perangkat}}</td>
-        <td><button class="button-27" role="button">Beli</button></td>
+        <td><button onclick="window.location.href='{% url 'fitur_abil:pembelian_premium' %}'" class="button-27" role="button">Beli</button></td>
       </tr>
       <tr>
         <td>Paket Lanjutan</td>
         <td>{{ Lanjutan.harga }}</td>
         <td>{{ Lanjutan.resolusi }}</td>
         <td>{{Lanjutan.perangkat}}</td>
-        <td><button class="button-27" role="button">Beli</button></td>
+        <td><button onclick="window.location.href='{% url 'fitur_abil:pembelian_lanjutan' %}'" class="button-27" role="button">Beli</button></td>
       </tr>
       <tr>
         <td>Paket Dasar</td>
         <td>{{ Dasar.harga }}</td>
         <td>{{ Dasar.resolusi }}</td>
         <td>{{ Dasar.perangkat }}</td>
-        <td><button class="button-27" role="button">Beli</button></td>
+        <td><button onclick="window.location.href='{% url 'fitur_abil:pembelian_dasar' %}'" class="button-27" role="button">Beli</button></td>
       </tr>
     </table>
   </div>
