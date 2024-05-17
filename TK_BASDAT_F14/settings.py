@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 from os import environ
 from dotenv import load_dotenv
-from db import *
 
 import sys
 load_dotenv(override=True)
