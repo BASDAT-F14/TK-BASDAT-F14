@@ -14,4 +14,10 @@ urlpatterns = [
     path('favorit/', views.favorit, name='favorit'),
     path('unduhan/', views.unduhan, name='unduhan'),
     path('langganan/', views.langganan, name='langganan'),
+    path('langganan/pembelian_premium/', views.pembelian_premium, name='pembelian_premium'),
+    path('langganan/pembelian_lanjutan/', views.pembelian_lanjutan, name='pembelian_lanjutan'),
+    path('langganan/pembelian_dasar/', views.pembelian_dasar, name='pembelian_dasar'),
+    path('langganan/beli_premium/', views.pembelian_paket_premium, name='pembelian_paket_premium'),
+    path('langganan/beli_lanjutan/', views.pembelian_paket_lanjutan, name='pembelian_paket_lanjutan'),
+    path('langganan/beli_dasar/', views.pembelian_paket_dasar, name='pembelian_paket_dasar'),
 ]

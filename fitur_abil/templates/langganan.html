@@ -109,7 +109,7 @@
 </head>
 <body>
   <div class="header">Langganan</div>
-  <div class="sub-header">Paket Langganan Aktif Anda:</div>
+  <div class="sub-header">Halo {{nama_user}}! Paket Langganan Aktif Anda:</div>
 
   <div class="card">
     <table>
@@ -122,12 +122,12 @@
         <th>Tanggal Akhir</th>
       </tr>
       <tr>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
+        <td>{{paket_sekarang.nama}}</td>
+        <td>{{paket_sekarang.harga}}</td>
+        <td>{{paket_sekarang.resolusi}}</td>
+        <td>{{paket_sekarang.perangkat}}</td>
+        <td>{{paket_sekarang.start_date}}</td>
+        <td>{{paket_sekarang.end_date}}</td>
       </tr>
     </table>
   </div>
@@ -142,25 +142,25 @@
         <th>Beli</th>
       </tr>
       <tr>
-        <td>Premium</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td><button class="button-27" role="button">Beli</button></td>
+        <td>Paket Premium</td>
+        <td>{{ Premium.harga }}</td>
+        <td>{{ Premium.resolusi }}</td>
+        <td>{{Premium.perangkat}}</td>
+        <td><button onclick="window.location.href='{% url 'fitur_abil:pembelian_premium' %}'" class="button-27" role="button">Beli</button></td>
       </tr>
       <tr>
-        <td>Standar</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td><button class="button-27" role="button">Beli</button></td>
+        <td>Paket Lanjutan</td>
+        <td>{{ Lanjutan.harga }}</td>
+        <td>{{ Lanjutan.resolusi }}</td>
+        <td>{{Lanjutan.perangkat}}</td>
+        <td><button onclick="window.location.href='{% url 'fitur_abil:pembelian_lanjutan' %}'" class="button-27" role="button">Beli</button></td>
       </tr>
       <tr>
-        <td>Basic</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td><button class="button-27" role="button">Beli</button></td>
+        <td>Paket Dasar</td>
+        <td>{{ Dasar.harga }}</td>
+        <td>{{ Dasar.resolusi }}</td>
+        <td>{{ Dasar.perangkat }}</td>
+        <td><button onclick="window.location.href='{% url 'fitur_abil:pembelian_dasar' %}'" class="button-27" role="button">Beli</button></td>
       </tr>
     </table>
   </div>
@@ -176,14 +176,16 @@
         <th>Tanggal Pembayaran</th>
         <th>Total Pembayaran</th>
       </tr>
+      {% for riwayat_id, riwayat_data in history.items %}
       <tr>
-        <td>1</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
+        <td>{{ riwayat_data.nama }}</td> 
+        <td>{{ riwayat_data.start }}</td>
+        <td>{{ riwayat_data.end }}</td>
+        <td>{{ riwayat_data.metode }}</td>
+        <td>{{ riwayat_data.waktu }}</td>
+        <td>{{ riwayat_data.bayar }}</td>
       </tr>
+      {% endfor %}
     </table>
   </div>
 </body>
