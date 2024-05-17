@@ -1,0 +1,1 @@
+web: gunicorn TK-BASDAT-F14.wsgi --log-file -
