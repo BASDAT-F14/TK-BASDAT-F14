@@ -22,24 +22,60 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <h1 class="card-title">Judul: <span id="judul"><data></span></h1>
-                    <h1 class="card-title">Sub Judul: <span id="judul"><data></span></h1>
-                <button class="btn btn-primary">Tonton</button>
+                {% for episode in list_episode %}
+                <h1 class="card-title">Judul: <span id="judul">{{ episode.judul }}</span></h1>
+                    <h1 class="card-title">Sub Judul: <span id="judul">{{ episode.sub_judul }}</span></h1>
 
+                <label for="slider" class="form-label">Watch this movie:</label>
+                <input type="range" class="form-range" id="slider" min="0" max="100" step="1" value="0" oninput="updateSliderValue(this.value)">
+                <p>Progress: <span id="sliderValue">0</span></p>
+        
+                <button class="btn btn-primary" onclick="tonton('{{ episode.id }}')">Tonton</button>
+
+                {% if episode_lainnya %}
                 <h2>Episode Lainnya:</h2>
-                <ul id="genre">
-                    <li><nama_genre_1></li>
-                    <!-- Add more genres as needed -->
+                {% for episode in episode_lainnya %}
+                <ul id="episode">
+                    <li><a href="/episode/{{ episode.sub_judul}}/{{ id }}/">{{ episode.sub_judul }}</a></li>
                 </ul>
+                {% endfor %}
+                {% endif %}
 
-                <p class="card-text">Sinopsis Episode: <span id="sinopsis"><data></span></p>
-                <p class="card-text">Durasi Episode: <span id="durasi"><data></span></p>
-                    <p class="card-text">URL Episode: <a href="<data>"><data></a></p>
-                <p class="card-text">Tanggal Rilis Episode: <span id="tanggalRilis"><data></span></p>
-
+                <p class="card-text">Sinopsis Episode: <span id="sinopsis">{{ episode.sinopsis }}</span></p>
+                <p class="card-text">Durasi Episode: <span id="durasi">{{ episode.durasi }}</span></p>
+                    <p class="card-text">URL Episode: <a href="{{ episode.url }}" target="_blank">{{ episode.url }}</a></p>
+                <p class="card-text">Tanggal Rilis Episode: <span id="tanggalRilis">{{ episode.release_date}}</span></p>
+                {% endfor %}
             </div>
         </div>
     </div>
+
+    <script>
+        function updateSliderValue(value) {
+            document.getElementById('sliderValue').textContent = value;
+        }
+
+        function tonton(id) {
+            if (document.getElementById('sliderValue').textContent >= 70){
+                fetch(`/tonton/${id}`, {
+                    method: 'GET',
+                    headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }).then(response => {
+                        if (response.ok) {
+                            location.reload()
+                            alert('Episode berhasil ditonton');
+                        } else {
+                            alert('Episode gagal ditonton');
+                        }
+                    })
+            } else{
+                alert('Episode gagal ditonton');
+            }
+        }
+    </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
+{% endblock content %}
