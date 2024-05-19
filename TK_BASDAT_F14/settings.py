@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from os import environ
+from dotenv import load_dotenv
+
+import sys
+load_dotenv(override=True)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'fitur_abil',
+    'authentication',
 ]
 
 MIDDLEWARE = [
@@ -55,7 +61,7 @@ ROOT_URLCONF = 'TK_BASDAT_F14.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -63,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'fitur_abil.context_processors.add_username',
             ],
         },
     },
@@ -74,11 +81,24 @@ WSGI_APPLICATION = 'TK_BASDAT_F14.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+PGHOST='ep-empty-wind-a1tpns38.ap-southeast-1.aws.neon.tech'
+PGDATABASE='pacilflix'
+PGUSER='pacilflixdb_owner'
+PGPASSWORD='9ocvgwQMarY1'   
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+  'default': {
+    'ENGINE': 'django.db.backends.postgresql',
+    'NAME': environ.get('PGDATABASE'),
+    'USER': environ.get('PGUSER'),
+    'PASSWORD': environ.get('PGPASSWORD'),
+    'HOST': environ.get('PGHOST'),
+    'PORT': environ.get('PGPORT', 5432),
+    'OPTIONS': {
+      'sslmode': 'require',
+      'options': '-c search_path=public,PACILFLIX'
+    },
+  }
 }
 
 
@@ -122,3 +142,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGIN_REDIRECT_URL = '/main'

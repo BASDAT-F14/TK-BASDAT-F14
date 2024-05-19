@@ -5,9 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ judul }}</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+    section {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 400px;
+        padding-top: 100px;
+        background: #3c31dd;
+    }
+
+    .curve {
+        position: absolute;
+        height: 250px;
+        width: 100%;
+        bottom: 0;
+        text-align: center;
+    }
+
+    .curve::before {
+        content: '';
+        display: block;
+        position: absolute;
+        border-radius: 100% 50%;
+        width: 55%;
+        height: 100%;
+        transform: translate(85%, 60%);
+        background-color: hsl(216, 21%, 16%);
+    }
+
+    .curve::after {
+        content: '';
+        display: block;
+        position: absolute;
+        border-radius: 100% 50%;
+        width: 55%;
+        height: 100%;
+        background-color: #3c31dd;
+        transform: translate(-4%, 40%);
+        z-index: -1;
+    }
+    .spacer {
+    aspect-ratio: 960/300;
+    width: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.layer1 {
+    background-image: url('./your-image.svg');
+}
+    
     body {
       font-family: 'Inter', sans-serif;
-      background-color: #f4f4f4;
+      background: linear-gradient(135deg, #f4f4f4 25%, #e0e0e0 75%);
+      background-size: 200% 200%;
+      animation: backgroundMove 10s ease infinite;
       margin: 0;
       padding: 0;
     }
@@ -15,11 +70,17 @@
     .header {
       background-color: #333;
       color: #fff;
-      padding: 10px 0;
+      padding: 20px 0;
       text-align: center;
-      font-size: 2em;
+      font-size: 2.5em;
       font-weight: 300;
       letter-spacing: 1px;
+      animation: headerFadeIn 2s ease-in-out;
+    }
+
+    @keyframes headerFadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .sub-header {
@@ -37,10 +98,16 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       background: #fff;
       padding: 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     }
 
     .card h2 {
-      font-size: 1.5em;
+      font-size: 1.8em;
       color: #333;
       margin-bottom: 20px;
     }
@@ -49,6 +116,12 @@
       width: 100%;
       text-align: center;
       border-collapse: collapse;
+      animation: tableFadeIn 1.5s ease-in-out;
+    }
+
+    @keyframes tableFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .card table th, .card table td {
@@ -74,7 +147,7 @@
       color: #FFFFFF;
       cursor: pointer;
       display: inline-block;
-      font-family: Roobert,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+      font-family: 'Inter', sans-serif;
       font-size: 14px;
       font-weight: 600;
       line-height: normal;
@@ -110,38 +183,11 @@
 </head>
 <body>
   {% block content %}
-  {% include 'navbar_guest.html' %}
-  <div class="header">Daftar Tayangan</div>
-  <div class="sub-header">
-    <form id="form" role="search">
-      <input type="search" id="query" name="q"
-       placeholder="Search..."
-       aria-label="Search through site content">
-       <button class="button-27">Search</button>
-    </form>
-  </div>
-  <div class="sub-header">Pencarian Tayangan berdasarkan judul</div>
-  <div class="card">
-    <h2>Film</h2>
-    <table>
-      <tr>
-        <th>UUID</th>
-        <th>URL</th>
-        <th>Release Date</th>
-        <th>Duration</th>
-        <th>Action</th>
-      </tr>
-      {% for film in films %}
-      <tr>
-        <td>{{ film.uuid }}</td>
-        <td><a href="{{ film.url }}">{{ film.url }}</a></td>
-        <td>{{ film.release_date }}</td>
-        <td>{{ film.duration }} minutes</td>
-        <td><button class="button-27" role="button">Lihat Tayangan</button></td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
+  {% include 'navbar.html' %}
+  <div class="header">Selamat Datang Di Pachilflix TK-F-14</div>
+  <section>
+    <div class="curve"></div>
+  </section>
   {% endblock content %}
 </body>
 </html>
