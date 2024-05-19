@@ -3,8 +3,9 @@
 {% block content %}
 <div class="collapse" id="navbarToggleExternalContent" data-bs-theme="dark">
     <div class="bg-dark p-4">
-        <h5 class="text-body-emphasis h4">Welcome to Pachilflix</h5>
+        <h5 class="text-body-emphasis h4">Welcome to Pachilflix F-14</h5>
         <div class="mt-4">
+            <button class="btn btn-outline-light btn-lg btn-block mb-2" onclick="window.location.href='{% url 'fitur_abil:daftar_guest' %}'">Daftar Tayangan</button>
             <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg btn-block mb-2">Login</a>
         </div>
     </div>
