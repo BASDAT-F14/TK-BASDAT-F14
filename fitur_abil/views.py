@@ -507,6 +507,10 @@ def logout(request):
     return render (request, 'daftar_tayang.html')
 
 def trailer(request):
+    # Pastikan pengguna sudah login
+    if request.user.is_authenticated:
+        return redirect('tayangan')
+    
     trailer_list = []
     with connection.cursor() as cursor:
         cursor.execute("SET search_path TO PACILFLIX")
@@ -574,7 +578,7 @@ def trailer(request):
             'films' : film,
             'series' : series
         }
-    return render (request, 'trailer.html', context)
+    return render(request, 'trailer.html', context)
 
 def get_url(id_tayangan):
     with connection.cursor() as cursor:
@@ -590,6 +594,10 @@ def get_url(id_tayangan):
     return f"/series/{id_tayangan}"
 
 def tayangan(request):
+    # Pastikan pengguna sudah login
+    # username = request.user.username
+    username = request.session.get('username')
+
     trailer_list = []
     with connection.cursor() as cursor:
         cursor.execute("SET search_path TO PACILFLIX")
@@ -726,6 +734,8 @@ def search_user(request):
     return render (request, 'search_user.html', context)
 
 def film(request, id):
+    username = request.session.get('username')
+
     list_genre = []
     list_pemain = []
     list_penulis = []
@@ -842,6 +852,8 @@ def series(request, id):
     penulis_skenarios = []
     list_ulasan = []
 
+    username = request.session.get('username')
+
     with connection.cursor() as cursor:
         cursor.execute("SET search_path TO PACILFLIX")
         cursor.execute("""
@@ -861,7 +873,7 @@ def series(request, id):
         sutradara = result[3]
 
         cursor.execute("""
-            SELECT COUNT(username)
+            SELECT COUNT(*)
             FROM riwayat_nonton
             WHERE id_tayangan = %s
         """, [id])
@@ -950,6 +962,8 @@ def series(request, id):
     return render (request, 'halaman_series.html', context)
 
 def episode(request, judul, id):
+    username = request.session.get('username')
+
     with connection.cursor() as cursor:
         cursor.execute("SET search_path TO PACILFLIX")
         cursor.execute("""
@@ -996,17 +1010,18 @@ def episode(request, judul, id):
     return render (request, 'halaman_episode.html', context)
 
 def tonton(request, id):
+    username = request.session.get('username')
+
     with connection.cursor() as cursor:
         cursor.execute("SET search_path TO PACILFLIX")
         cursor.execute("""
             INSERT INTO RIWAYAT_NONTON (id_tayangan, username, start_date_time, end_date_time)
             VALUES (%s, %s, NOW(), NOW())
-        """, [id, 'user1'])
+        """, [id, username])
     return JsonResponse({'status': 'success'})
 
 def ulasan(request, id):
-        # username = request.user.username
-        username = 'user1'
+        username = request.session.get('username')
         data = json.loads(request.body)
         deskripsi = data.get('deskripsi')
         rating = data.get('rating')
@@ -1019,37 +1034,3 @@ def ulasan(request, id):
             """, [id, username, rating, deskripsi])
             
         return JsonResponse({'status': 'success'})
-
-
-#                           Table "pacilflix.ulasan"
-#    Column    |            Type             | Collation | Nullable | Default
-# -------------+-----------------------------+-----------+----------+---------
-#  id_tayangan | uuid                        |           |          |
-#  username    | character varying(50)       |           | not null |
-#  timestamp   | timestamp without time zone |           | not null |
-#  rating      | integer                     |           | not null | 0
-#  deskripsi   | character varying(255)      |           |          |
-# Indexes:
-#     "ulasan_pkey" PRIMARY KEY, btree (username, "timestamp")
-# Foreign-key constraints:
-#     "ulasan_id_tayangan_fkey" FOREIGN KEY (id_tayangan) REFERENCES tayangan(id)
-#     "ulasan_username_fkey" FOREIGN KEY (username) REFERENCES pengguna(username)
-# Triggers:
-#     before_ulasan_insert BEFORE INSERT ON ulasan FOR EACH ROW EXECUTE FUNCTION check_ulasan_exists()
-
-#                                 Table "pacilflix.pengguna"
-#    Column    |         Type          | Collation | Nullable |           Default
-# -------------+-----------------------+-----------+----------+------------------------------
-#  username    | character varying(50) |           | not null |
-#  password    | character varying(50) |           | not null |
-#  negara_asal | character varying(50) |           | not null | 'Unknown'::character varying
-# Indexes:
-#     "pengguna_pkey" PRIMARY KEY, btree (username)
-# Referenced by:
-#     TABLE "daftar_favorit" CONSTRAINT "daftar_favorit_username_fkey" FOREIGN KEY (username) REFERENCES pengguna(username)
-#     TABLE "riwayat_nonton" CONSTRAINT "riwayat_nonton_username_fkey" FOREIGN KEY (username) REFERENCES pengguna(username)
-#     TABLE "tayangan_terunduh" CONSTRAINT "tayangan_terunduh_username_fkey" FOREIGN KEY (username) REFERENCES pengguna(username)
-#     TABLE "transaction" CONSTRAINT "transaction_username_fkey" FOREIGN KEY (username) REFERENCES pengguna(username)
-#     TABLE "ulasan" CONSTRAINT "ulasan_username_fkey" FOREIGN KEY (username) REFERENCES pengguna(username)
-# Triggers:
-#     before_insert_pengguna_trigger BEFORE INSERT ON pengguna FOR EACH ROW EXECUTE FUNCTION check_existing_username()
