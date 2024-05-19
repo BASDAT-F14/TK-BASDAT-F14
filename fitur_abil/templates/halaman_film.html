@@ -22,45 +22,142 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <h1 class="card-title">Judul: <span id="judul"><data></span></h1>
-                <button class="btn btn-primary">Tonton</button>
+                <h1 class="card-title">Judul: <span id="judul">{{ judul }}</span></h1>
+
+                <label for="slider" class="form-label">Watch this movie:</label>
+                <input type="range" class="form-range" id="slider" min="0" max="100" step="1" value="0" oninput="updateSliderValue(this.value)">
+                <p>Progress: <span id="sliderValue">0</span></p>
+
+
+                <button class="btn btn-primary" onclick="tonton('{{ id }}')">Tonton</button>
                 <button class="btn btn-secondary">Unduh Tayangan</button>
                 <button class="btn btn-success">Favorit Tayangan</button>
 
-                <p class="card-text">Total View: <span id="totalView"><data></span></p>
-                <p class="card-text">Rating Rata-Rata: <span id="rating"><data></span></p>
-                <p class="card-text">Sinopsis: <span id="sinopsis"><data></span></p>
-                <p class="card-text">Durasi Film: <span id="durasi"><data></span></p>
-                <p class="card-text">Tanggal Rilis Film: <span id="tanggalRilis"><data></span></p>
-                <p class="card-text">URL Film: <a href="<data>"><data></a></p>
+                <p class="card-text">Total View: <span id="totalView">{{ view }}</span></p>
+                <p class="card-text">Rating Rata-Rata: <span id="rating2">{{ rating }}</span></p>
+                <p class="card-text">Sinopsis: <span id="sinopsis">{{ sinopsis }}</span></p>
+                <p class="card-text">Durasi Film: <span id="durasi">{{ durasi }}</span></p>
+                <p class="card-text">Tanggal Rilis Film: <span id="tanggalRilis">{{ release_date }}</span></p>
+                <p class="card-text">URL Film: <a href="{{ url }}" target="_blank">{{ url }}</a></p>
 
                 <h2>Genre:</h2>
                 <ul id="genre">
-                    <li><nama_genre_1></li>
-                    <!-- Add more genres as needed -->
+                {% if list_genre %}
+                    {% for genre in list_genre %}
+                        <li>{{ genre }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li>Tidak ada genre</li>
+                {% endif %}
                 </ul>
 
-                <p class="card-text">Asal Negara: <span id="asalNegara"><data></span></p>
+                <p class="card-text">Asal Negara: <span id="asalNegara">{{ asal_negara }}</span></p>
 
                 <h2>Pemain:</h2>
                 <ul id="pemain">
-                    <li><nama_pemain_1></li>
-                    <!-- Add more pemain as needed -->
+                {% if list_pemain %}
+                    {% for pemain in list_pemain %}
+                        <li>{{ pemain }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li>Tidak ada pemain</li>
+                {% endif %}
                 </ul>
 
                 <h2>Penulis Skenario:</h2>
                 <ul id="penulisSkenario">
-                    <li><nama_penulis_skenario_1></li>
-                    <!-- Add more penulis skenario as needed -->
+                {% if list_penulis_skenario %}
+                    {% for penulis in list_penulis_skenario %}
+                        <li>{{ penulis }}</li>
+                    {% endfor %}
+                {% else %}
+                    <li>Tidak ada penulis skenario</li>
+                {% endif %}
                 </ul>
 
-                <p class="card-text">Sutradara: <span id="sutradara"><data></span></p>
+                <p class="card-text">Sutradara: <span id="sutradara">{{ sutradara }}</span></p>
 
-                    <button class="btn btn-success">Bagian Ulasan</button>
+                <!-- <button class="btn btn-success">Bagian Ulasan</button> -->
                 <!-- Add review section here -->
-            </div>
+
+                <div class="header">Ulasan</div>
+                <div class="container">
+                    <div class="card">
+                        <div class="card-body">
+                            <form>
+                                <label for="deskripsiUlasan">Deskripsi Ulasan:</label><br>
+                                <textarea id="deskripsiUlasan" name="deskripsiUlasan"></textarea><br>
+                                <label for="rating">Rating:</label><br>
+                                <input type="number" id="rating" name="rating" min="1" max="5"><br>
+                                <input type="button" value="Submit" onclick="postUlasan('{{id}}', document.getElementById('deskripsiUlasan').value, document.getElementById('rating').value)">
+                            </form>
+                            <h2>Daftar Ulasan:</h2>
+                            {% if list_ulasan %}
+                            {% for ulasan in list_ulasan %}
+                                <div class="card review-card mb-2">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ ulasan.username }}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">Rating: {{ ulasan.rating }}</h6>
+                                        <p class="card-text">{{ ulasan.deskripsi }}</p>
+                                        <p class="card-text"><small class="text-muted">{{ ulasan.timestamp }}</small></p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {% else %}
+                            <p class="card-text">Belum ada ulasan</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                </div>
         </div>
     </div>
+    <script>
+        function updateSliderValue(value) {
+            document.getElementById('sliderValue').textContent = value;
+        }
+
+        function tonton(id) {
+            if (document.getElementById('sliderValue').textContent >= 70){
+                fetch(`/tonton/${id}`, {
+                    method: 'GET',
+                    headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }).then(response => {
+                        if (response.ok) {
+                            location.reload()
+                            alert('Film berhasil ditonton');
+                        } else {
+                            alert('Film gagal ditonton');
+                        }
+                    })
+            } else{
+                alert('Film gagal ditonton');
+            }
+        }
+
+        function postUlasan(id, deskripsi, rating) {
+            console.log(id, deskripsi, rating)
+            fetch(`/ulasan/${id}/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    deskripsi: deskripsi,
+                    rating: rating
+                })
+            }).then(response => {
+                if (response.ok) {
+                    location.reload()
+                    alert('Ulasan berhasil ditambahkan');
+                } else {
+                    alert('Ulasan gagal ditambahkan');
+                }
+            })
+        }
+    </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>

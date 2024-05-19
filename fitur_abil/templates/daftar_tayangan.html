@@ -108,16 +108,20 @@
 <body>
   <div class="header">Daftar Tayangan</div>
   <div class="sub-header">Input pencarian tayangan berdasarkan judul</div>
-  <div class="sub-header"><form id="form" role="search">
-    <input type="search" id="query" name="q"
-     placeholder="Search..."
-     aria-label="Search through site content">
-    <button class="button-27">Search</button>
-  </form></div>
+  <div class="sub-header">
+    <form id="form" role="search" action="/search_user/" method="POST">
+      {% csrf_token %}
+      <input type="search" id="query" name="query"
+      placeholder="Search..."
+      aria-label="Search through site content">
+      <button class="button-27" type="submit">Search</button>
+    </form>
+  </div>
   <div class="sub-header">10 tayangan terbaik minggu ini</div>
 
   <div class="card">
     <h2>Opsi top global 10</h2>
+    {% if trailers %}
     <table>
       <tr>
         <th>Peringkat</th>
@@ -128,51 +132,46 @@
         <th>Total view 7 Hari Terakhir</th>
         <th>Tayangan</th>
       </tr>
+      {% for trailer in trailers %}
       <tr>
-        <td>1</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td><button class="button-27" role="button">Lihat Tayangan</button></td>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ trailer.judul }}</td>
+          <td>{{ trailer.sinopsis }}</td>
+          <td><a href="{{ trailer.url_video_trailer }}">{{ trailer.url_video_trailer }}</a></td>
+          <td>{{ trailer.release_date_trailer }}</td>
+          <td>{{ trailer.view }}</td>
+          <td><a href="{{trailer.url}}" class="button-27" role="button">Lihat Tayangan</a></td>
       </tr>
-      <tr>
-        <td>2</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td><button class="button-27" role="button">Lihat Tayangan</button></td>
-      </tr>
+      {% endfor %}
     </table>
+    {% else %}
+    <p>Tidak ada 10 tayangan terbaik minggu ini</p>
+    {% endif %}
   </div>
 
   <div class="card">
     <h2>Film</h2>
     <table>
       <tr>
+        <th>Peringkat</th>
         <th>Judul</th>
         <th>Sinopsis Trailer</th>
         <th>URL Trailer</th>
         <th>Tanggal Rilis Trailer</th>
+        <th>Total view 7 Hari Terakhir</th>
         <th>Tayangan</th>
       </tr>
+      {% for film in films %}
       <tr>
-        <td>1</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td><button class="button-27" role="button">Lihat Tayangan</button></td>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ film.judul }}</td>
+          <td>{{ film.sinopsis }}</td>
+          <td><a href="{{ film.url_video_trailer }}">{{ film.url_video_trailer }}</a></td>
+          <td>{{ film.release_date_trailer }}</td>
+          <td>{{ film.view }}</td>
+          <td><a href="{{film.url}}" class="button-27" role="button">Lihat Tayangan</a></td>
       </tr>
-      <tr>
-        <td>2</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td><button class="button-27" role="button">Lihat Tayangan</button></td>
-      </tr>
+      {% endfor %}
     </table>
   </div>
 
@@ -180,27 +179,25 @@
     <h2>Series</h2>
     <table>
       <tr>
+        <th>Peringkat</th>
         <th>Judul</th>
         <th>Sinopsis Trailer</th>
         <th>URL Trailer</th>
         <th>Tanggal Rilis Trailer</th>
+        <th>Total view 7 Hari Terakhir</th>
         <th>Tayangan</th>
       </tr>
+      {% for s in series %}
       <tr>
-        <td>1</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td><button class="button-27" role="button">Lihat Tayangan</button></td>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ s.judul }}</td>
+          <td>{{ s.sinopsis }}</td>
+          <td><a href="{{ s.url_video_trailer }}">{{ s.url_video_trailer }}</a></td>
+          <td>{{ s.release_date_trailer }}</td>
+          <td>{{ s.view }}</td>
+          <td><a href="{{s.url}}" class="button-27" role="button">Lihat Tayangan</a></td>
       </tr>
-      <tr>
-        <td>2</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td>dummy</td>
-        <td><button class="button-27" role="button">Lihat Tayangan</button></td>
-      </tr>
+      {% endfor %}
     </table>
-  </div>
 </body>
 </html>
