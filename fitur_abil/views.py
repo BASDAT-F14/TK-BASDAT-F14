@@ -16,13 +16,131 @@ def show_main(request):
     return render(request, 'main.html')
 
 def pembelian_premium(request):
-    return render(request, 'beli_langganan_premium.html')
+    username = request.user.username
+    nama_user = request.session.get('username')
+    with connection.cursor() as cursor:
+        cursor.execute("SET search_path TO PACILFLIX")
+        cursor.execute("""
+            SELECT 
+                nama,
+                harga,
+                resolusi_layar
+            FROM 
+                paket
+            where
+                nama = 'Paket Premium'
+        """)
+        rows = cursor.fetchall()
+        context = {"nama":rows[0][0], "harga":rows[0][1], "resolusi":rows[0][2]}
+    buatdisql = f"""
+            SELECT 
+                dukungan_perangkat
+            FROM 
+                dukungan_perangkat
+            where
+                nama_paket = '{rows[0][0]}'
+        """
+    nama = rows[0][0]
+    with connection.cursor() as cursor:
+        cursor.execute("SET search_path TO PACILFLIX")
+        cursor.execute(buatdisql)
+        rows = cursor.fetchall()
+        context["dukungan"] = rows
+    print(context)
+    x = context["dukungan"]
+    stringawal = ""
+    for i in x:
+        stringawal += str(i)[2:-3]
+        stringawal+= ","
+        stringawal+= " "
+    stringawal = stringawal[:-2]
+    context["dukungan"] = stringawal   
+    return render(request, 'beli_langganan_premium.html', context)
 
 
 def pembelian_lanjutan(request):
-    return render(request, 'beli_langganan_lanjutan.html')
+    username = request.user.username
+    nama_user = request.session.get('username')
+    with connection.cursor() as cursor:
+        cursor.execute("SET search_path TO PACILFLIX")
+        cursor.execute("""
+            SELECT 
+                nama,
+                harga,
+                resolusi_layar
+            FROM 
+                paket
+            where
+                nama = 'Paket Lanjutan'
+        """)
+        rows = cursor.fetchall()
+        context = {"nama":rows[0][0], "harga":rows[0][1], "resolusi":rows[0][2]}
+    buatdisql = f"""
+            SELECT 
+                dukungan_perangkat
+            FROM 
+                dukungan_perangkat
+            where
+                nama_paket = '{rows[0][0]}'
+        """
+    nama = rows[0][0]
+    with connection.cursor() as cursor:
+        cursor.execute("SET search_path TO PACILFLIX")
+        cursor.execute(buatdisql)
+        rows = cursor.fetchall()
+        context["dukungan"] = rows
+    print(context)
+    x = context["dukungan"]
+    stringawal = ""
+    for i in x:
+        stringawal += str(i)[2:-3]
+        stringawal+= ","
+        stringawal+= " "
+    stringawal = stringawal[:-2]
+    context["dukungan"] = stringawal
+    return render(request, 'beli_langganan_lanjutan.html', context)
+
 def pembelian_dasar(request):
-    return render(request, 'beli_langganan_dasar.html')
+    username = request.user.username
+    nama_user = request.session.get('username')
+    with connection.cursor() as cursor:
+        cursor.execute("SET search_path TO PACILFLIX")
+        cursor.execute("""
+            SELECT 
+                nama,
+                harga,
+                resolusi_layar
+            FROM 
+                paket
+            where
+                nama = 'Paket Dasar'
+        """)
+        rows = cursor.fetchall()
+        context = {"nama":rows[0][0], "harga":rows[0][1], "resolusi":rows[0][2]}
+    buatdisql = f"""
+            SELECT 
+                dukungan_perangkat
+            FROM 
+                dukungan_perangkat
+            where
+                nama_paket = '{rows[0][0]}'
+        """
+    nama = rows[0][0]
+    with connection.cursor() as cursor:
+        cursor.execute("SET search_path TO PACILFLIX")
+        cursor.execute(buatdisql)
+        rows = cursor.fetchall()
+        context["dukungan"] = rows
+    print(context)
+    x = context["dukungan"]
+    stringawal = ""
+    for i in x:
+        stringawal += str(i)[2:-3]
+        stringawal+= ","
+        stringawal+= " "
+    stringawal = stringawal[:-2]
+    context["dukungan"] = stringawal
+    return render(request, 'beli_langganan_dasar.html', context)
 
 @csrf_exempt
 def pembelian_paket_premium(request):
@@ -272,10 +390,14 @@ def daftar_kontributor(request):
     kontributor_pemain = []
     kontributor_penulis_skenario = []
     for row in rows:
+        if row[2]==1:
+            kelamin = "Perempuan"
+        else:
+            kelamin = "Laki Laki"
         kontributor_dict = {
             'nama': row[0],
             'tipe': row[1],
-            'jenis_kelamin': row[2],
+            'jenis_kelamin': kelamin,
             'kewarganegaraan': row[3]
         }
         if row[1] == 'Sutradara':

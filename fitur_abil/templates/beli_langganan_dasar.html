@@ -114,11 +114,11 @@
     <div class="container">
         <div class="card">
             <div class="card-body">
-                <h1 class="card-title">Informasi Paket yang Ingin Dibeli:</h1>
-                <p class="card-text">Nama Paket : Paket Dasar<span id="nama"><data></span></p>
-                <p class="card-text">Harga: 99.000<span id="harga"><data></span></p>
-                <p class="card-text">Resolusi Layar: 720p<span id="resolusiLayar"><data></span></p>
-                <p class="card-text">Dukungan Perangkat: Android, iOS, Windows<span id="dukunganPerangkat"><data></span></p>
+              <h1 class="card-title">Informasi Paket yang Ingin Dibeli:</h1>
+                <p class="card-text">Nama Paket : {{nama}}<span id="nama"><data></span></p>
+                <p class="card-text">Harga: {{harga}}<span id="harga"><data></span></p>
+                <p class="card-text">Resolusi Layar: {{Resolusi}}<span id="resolusiLayar"><data></span></p>
+                <p class="card-text">Dukungan Perangkat: {{dukungan}}<span id="dukunganPerangkat"><data></span></p>
                 <p class="card-text">Durasi paket : 7 Hari<span id="durasipaket"><data></span></p>
                 <form action="{% url 'fitur_abil:pembelian_paket_dasar' %}" method="post" name="Userinfo" id="Userinfo">{% csrf_token %}
                     <div class="form-group">
