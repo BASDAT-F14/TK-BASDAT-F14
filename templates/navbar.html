@@ -5,10 +5,9 @@
     <div class="bg-dark p-4">
         <h5 class="text-body-emphasis h4">Welcome to Pachilflix F-14, {{ username }}</h5>
         <div class="mt-4">
+            <button class="btn btn-outline-light btn-lg btn-block mb-2" onclick="window.location.href='{% url 'fitur_abil:main' %}'">Main</button>
             <button class="btn btn-outline-light btn-lg btn-block mb-2" onclick="window.location.href='{% url 'fitur_abil:daftar_tayang' %}'">Daftar Tayangan</button>
             <button class="btn btn-outline-light btn-lg btn-block mb-2" onclick="window.location.href='{% url 'fitur_abil:daftar_kontributor' %}'">Daftar Kontributor</button>
-            <button class="btn btn-outline-light btn-lg btn-block mb-2" onclick="window.location.href='{% url 'fitur_abil:favorit' %}'">Kelola Daftar Favorit</button>
-            <button class="btn btn-outline-light btn-lg btn-block mb-2" onclick="window.location.href='{% url 'fitur_abil:unduhan' %}'">Kelola Daftar Unduhan</button>
             <button class="btn btn-outline-light btn-lg btn-block mb-2" onclick="window.location.href='{% url 'fitur_abil:langganan' %}'">Kelola Langganan</button>
             <a href="{% url 'logout' %}" class="btn btn-outline-light btn-lg btn-block mb-2">Log Out</a>
         </div>
